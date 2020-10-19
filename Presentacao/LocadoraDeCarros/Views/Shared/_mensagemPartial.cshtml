@@ -1,0 +1,32 @@
+﻿
+@if (ViewData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+        <strong>Erro: </strong>@ViewData["Mensagem"]
+    </div>
+}
+
+@if (ViewData["warning"] != null)
+{
+    <div class="alert alert-warning alert-dismissable">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+        <strong>Atenção: </strong>@ViewData["Mensagem"]
+    </div>
+}
+
+@if (ViewData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissable">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+        <strong>Sucesso: </strong>@ViewData["Mensagem"]
+    </div>
+}
+
+@if (ViewData["info"] != null)
+{
+    <div class="alert alert-info alert-dismissable">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+        <strong>Informação: </strong>@ViewData["Mensagem"]
+    </div>
+}
