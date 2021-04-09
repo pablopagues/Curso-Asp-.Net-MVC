@@ -4,7 +4,9 @@ using LocadoraDeCarros.Models;
 using Microsoft.AspNetCore.Mvc;
 using Negocio.Models;
 using Negocio.ServicoNegocio.Base;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LocadoraDeCarros.Controllers
 {
@@ -22,8 +24,7 @@ namespace LocadoraDeCarros.Controllers
         // GET: Cliente
         public ActionResult Index()
         {
-            var listaClienteVM = _mapper.Map<List<ClienteViewModel>>(_clienteServico.ObterListaClientes());
-            return View(listaClienteVM);
+            return View();
         }
 
         // GET: Cliente/Details/5
@@ -139,6 +140,34 @@ namespace LocadoraDeCarros.Controllers
                 Mensagem("Ocorreu alguma exception ao excluir o cliente.", "Error");
                 return View(clienteExcluir);
             }
+        }
+
+        [HttpPost, ActionName("CarregarDados")]
+        public ActionResult CarregarDados() 
+        {
+            var draw = Request.Form["draw"];
+            var start = Request.Form["start"];
+            var length = Request.Form["length"];
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"] + "][name]"];
+            var sortColumnDir = Request.Form["order[0][dir]"];
+            var searchValue = Request.Form["search[value]"];
+
+            int pageSize = length != string.Empty ? Convert.ToInt32(length) : 0;
+            int skip = start != string.Empty ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+
+            var result = _clienteServico.ObterListaClientes();
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                result = (List<Cliente>)result.Where(m => m.Nome.Contains(searchValue)).ToList();
+            }
+
+            recordsTotal = result.Count();
+
+            var data = result.Skip(skip).Take(pageSize).ToList();
+
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
     }
 }
